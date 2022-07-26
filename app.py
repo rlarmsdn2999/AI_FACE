@@ -1,6 +1,6 @@
-from flask import Flask, request, render_template
+from flask import Flask, redirect, request, render_template, url_for
 from bs4 import BeautifulSoup as bs
-import requests
+import requests, face
 app = Flask(__name__)
 
 @app.route('/')
@@ -24,8 +24,9 @@ def method():
     if request.method == 'GET':
         return "GET으로 전달"
     else:
-        
-        return render_template("myimage.html")
+        imglink  = request.form['imglink']
+        face.mk_face(imglink)
+        return redirect(url_for('myimage'))
 
 if __name__ == '__main__':
     app.run(debug=True)

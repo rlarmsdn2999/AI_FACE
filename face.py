@@ -45,9 +45,6 @@ def shape_to_numpy_array(shape, dtype="int"):
 
 
 def visualize_facial_landmarks(image, shape, colors=None, alpha=0.75):
-
-    
-
     # create two copies of the input image -- one for the
     # overlay and one for the final output image
     overlay = image.copy()
@@ -63,17 +60,12 @@ def visualize_facial_landmarks(image, shape, colors=None, alpha=0.75):
                   (168, 100, 168), (158, 163, 32),
                   (163, 38, 32), (180, 42, 220)]
 
-    
-
     # loop over the facial landmark regions individually
     for (i, name) in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
         
-
         # grab the (x, y)-coordinates associated with the
         # face landmark
         (j, k) = FACIAL_LANDMARKS_INDEXES[name]
-
-        
 
         pts = shape[j:k]
         facial_features_cordinates[name] = pts
@@ -102,37 +94,25 @@ def visualize_facial_landmarks(image, shape, colors=None, alpha=0.75):
     print(facial_features_cordinates)
     return output
 
-
-
-# initialize dlib's face detector (HOG-based) and then create
-# the facial landmark predictor
-detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
-
-
-
-
-# load the input image, resize it, and convert it to grayscale
-image = cv2.imread('youngwoo.jpg')
-
-image = imutils.resize(image, width=500)
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-# detect faces in the grayscale image
-rects = detector(gray, 1)
-
-# loop over the face detections
-for (i, rect) in enumerate(rects):
-    
-
-    # determine the facial landmarks for the face region, then
-    # convert the landmark (x, y)-coordinates to a NumPy array
-    shape = predictor(gray, rect)
-    shape = shape_to_numpy_array(shape)
-
-    
-
+def mk_face(imglink):
+    # initialize dlib's face detector (HOG-based) and then create
+    # the facial landmark predictor
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+    # load the input image, resize it, and convert it to grayscale
+    image = cv2.imread(imglink) 
+    image = imutils.resize(image, width=500)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # detect faces in the grayscale image
+    rects = detector(gray, 1)
+    # loop over the face detections
+    for (i, rect) in enumerate(rects):
+        # determine the facial landmarks for the face region, then
+        # convert the landmark (x, y)-coordinates to a NumPy array
+        shape = predictor(gray, rect)
+        shape = shape_to_numpy_array(shape)
+        
     output = visualize_facial_landmarks(image, shape)
-    cv2.imwrite('bb.jpg',output)
+    cv2.imwrite('static/img/bb.jpg',output)
     #cv2.imshow("Image", output)
     #cv2.waitKey(0)
